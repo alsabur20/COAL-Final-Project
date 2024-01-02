@@ -1,16 +1,16 @@
 
-AVRASM ver. 2.2.8  D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\main.asm Fri Dec 29 11:52:38 2023
+AVRASM ver. 2.2.8  C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm Tue Jan 02 11:52:09 2024
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
-D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\main.asm(1): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
-D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\main.asm(2): Including file 'D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\uartMacros.inc'
-D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\main.asm(3): Including file 'D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\delayMacro.inc'
-D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\main.asm(4): Including file 'D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\divMacro.inc'
+C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(1): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
+C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(2): Including file 'C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\uartMacros.inc'
+C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(3): Including file 'C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\delayMacro.inc'
+C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(4): Including file 'C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\divMacro.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
-D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\main.asm(1): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
-D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\main.asm(2): Including file 'D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\uartMacros.inc'
-D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\main.asm(3): Including file 'D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\delayMacro.inc'
-D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\main.asm(4): Including file 'D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\divMacro.inc'
+C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(1): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
+C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(2): Including file 'C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\uartMacros.inc'
+C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(3): Including file 'C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\delayMacro.inc'
+C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(4): Including file 'C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\divMacro.inc'
                                  
                                  .include "m328pdef.inc"
                                  
@@ -1054,6 +1054,29 @@ D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\main.asm(4): Including file 'D:\Sem
                                  ;	Serial_readStr		pending
                                  
                                  
+                                 ; Macro to read a single character from the UART
+                                 ; Inputs: register to hold the received character
+                                 ; Outputs: none
+                                 ; Working: receives characters via UART and stores in a register
+                                 ; Registers modified: r16
+                                 .macro Serial_readChar
+                                 	; save the state of R16
+                                 	PUSH            R16
+                                 	Serial_readChar_WAIT:
+                                 	; wait till a character is in the buffer
+                                 	LDS             R16, UCSR0A
+                                 	SBRS            R16, RXC0
+                                 	RJMP            Serial_readChar_WAIT
+                                 	; read the character
+                                 	LDS             @0, UDR0
+                                 	Serial_readChar_ClearBuffer:
+                                     ; Check if the buffer is still not empty
+                                     LDS             R16, UCSR0A
+                                     SBRS            R16, RXC0
+                                     ;RJMP            Serial_readChar_ClearBuffer
+                                 	; restore the state of R16 and return
+                                 	POP             R16
+                                 .endmacro
                                  
                                  ; Macro to initializes the UART to 9600 BAUD at a frequency of 16 MHz (for Arduino UNO ATmega328p)
                                  ; Inputs: none
@@ -1590,8 +1613,11 @@ D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\main.asm(4): Including file 'D:\Sem
                                  
                                  .def A = r16
                                  .def AH = r17
+                                 .def buttonState = r18
+                                 .def alarmState = r19
                                  
-                                 .org 0x00
+                                 .org 0x0000
+                                 	
                                  	; I/O Pins Configuration
 000000 9a25                      	SBI DDRB, 5
 000001 9a24                      	SBI DDRB, 4
@@ -1634,163 +1660,50 @@ D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\main.asm(4): Including file 'D:\Sem
 000025 cffc                          rjmp adc_wait
                                      
                                  	; Read ADC result
-000026 9120 0078                     lds r18, adcl
+000026 9120 0078                     LDS r18, ADCL
 000028 9120 0079                 	LDS r18, ADCH	
-00002a 92ff
+00002a 930f
 00002b 930f
-00002c 931f
-00002d 932f
-00002e 933f
-00002f 93cf
-000030 93df
-000031 93ef
-000032 2f02
-000033 2f30
+00002c 9100 00c0
+00002e ff05
+00002f cffc
+000030 910f
+000031 2f02
+000032 9300 00c6
 000034 930f
 000035 9100 00c0
 000037 ff05
 000038 cffc
 000039 910f
-00003a e0c0
-00003b e0d0
-00003c e0e0
-00003d e01a
-00003e 932f
-00003f 18ff
-000040 e029
-000041 1f00
-000042 952a
-000043 f409
-000044 c008
-000045 1cff
-000046 1af1
-000047 f418
-000048 0ef1
-000049 9488
-00004a cff6
-00004b 9408
-00004c cff4
-00004d 912f
-00004e 2dcf
-00004f e01a
-000050 932f
-000051 18ff
-000052 e029
-000053 1f00
-000054 952a
-000055 f409
-000056 c008
-000057 1cff
-000058 1af1
-000059 f418
-00005a 0ef1
-00005b 9488
-00005c cff6
-00005d 9408
-00005e cff4
-00005f 912f
-000060 2ddf
-000061 e01a
-000062 932f
-000063 18ff
-000064 e029
-000065 1f00
-000066 952a
-000067 f409
-000068 c008
-000069 1cff
-00006a 1af1
-00006b f418
-00006c 0ef1
-00006d 9488
-00006e cff6
-00006f 9408
-000070 cff4
-000071 912f
-000072 2def
-000073 e020
-000074 e310
-000075 3020
-000076 f029
-000077 3021
-000078 f041
-000079 3022
-00007a f059
-00007b c01d
-00007c 3634
-00007d f0c8
-00007e 0fe1
-00007f 2f0e
-000080 c008
-000081 303a
-000082 f0a0
-000083 0fd1
-000084 2f0d
-000085 c003
-000086 0fc1
-000087 2f0c
-000088 c000
-000089 930f
-00008a 9100 00c0
-00008c ff05
-00008d cffc
-00008e 910f
-00008f 9300 00c6
-000091 930f
-000092 9100 00c0
-000094 ff05
-000095 cffc
-000096 910f
-000097 9523
-000098 cfdc
-000099 91ef
-00009a 91df
-00009b 91cf
-00009c 913f
-00009d 912f
-00009e 911f
-00009f 910f
-0000a0 90ff                      	Serial_writeReg_ASCII r18
-0000a1 930f
-0000a2 9100 00c0
-0000a4 ff05
-0000a5 cffc
-0000a6 e00d
-0000a7 9300 00c6
-0000a9 9100 00c0
-0000ab ff05
-0000ac cffc
-0000ad e00a
-0000ae 9300 00c6
-0000b0 910f                      	Serial_writeNewLine
-0000b1 932f
-0000b2 938f
-0000b3 939f
-0000b4 e624
-0000b5 e38e
-0000b6 e99c
-0000b7 9701
-0000b8 f7f1
-0000b9 952a
-0000ba f7d1
-0000bb 0000
-0000bc 919f
-0000bd 918f
-0000be 912f                      	delay 1000
+00003a 910f                      	Serial_writeReg r18
+00003b 932f
+00003c 938f
+00003d 939f
+00003e e624
+00003f e38e
+000040 e99c
+000041 9701
+000042 f7f1
+000043 952a
+000044 f7d1
+000045 0000
+000046 919f
+000047 918f
+000048 912f                      	delay 1000
                                      ; Compare ADC result with TRIGPOINT
-0000bf 3c28                          cpi r18, 200
-0000c0 f420                          brsh smokeDetected
+000049 3b2e                          cpi r18, 190
+00004a f420                          brsh smokeDetected
                                      
-0000c1 9a2d                          SBI PORTB, 5
-0000c2 982c                      	CBI PORTB, 4
-0000c3 982b                      	CBI PORTB, 3
-0000c4 cf58                          rjmp loop
+00004b 9a2d                          SBI PORTB, 5
+00004c 982c                      	CBI PORTB, 4
+00004d 982b                      	CBI PORTB, 3
+00004e cfce                          rjmp loop
                                      
                                  smokeDetected:
-0000c5 982d                          CBI PORTB, 5
-0000c6 9a2c                      	SBI PORTB, 4
-0000c7 9a2b                      	SBI PORTB, 3
-0000c8 cf54                          rjmp loop
+00004f 982d                          CBI PORTB, 5
+000050 9a2c                      	SBI PORTB, 4
+000051 9a2b                      	SBI PORTB, 3
+000052 cfca                          rjmp loop
 
 
 RESOURCE USE INFORMATION
@@ -1810,37 +1723,37 @@ counted separately from r26..r31 here.
 "ATmega328P" register use summary:
 x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:  20 r16:  50 r17:  19 r18:  27 r19:   5 r20:   0 
-r21:   0 r22:   0 r23:   0 r24:   4 r25:   3 r26:   0 r27:   0 r28:   6 
-r29:   6 r30:   6 r31:   0 
-Registers used: 10 out of 35 (28.6%)
+r13:   0 r14:   0 r15:   0 r16:  29 r17:   4 r18:   8 r19:   0 r20:   0 
+r21:   0 r22:   0 r23:   0 r24:   4 r25:   3 r26:   0 r27:   0 r28:   0 
+r29:   0 r30:   0 r31:   0 
+Registers used: 5 out of 35 (14.3%)
 
 "ATmega328P" instruction use summary:
-.lds  :   0 .sts  :   0 adc   :   0 add   :   6 adiw  :   0 and   :   0 
+.lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
 andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
-brcc  :   3 brcs  :   0 break :   0 breq  :   3 brge  :   0 brhc  :   0 
-brhs  :   0 brid  :   0 brie  :   0 brlo  :   2 brlt  :   0 brmi  :   0 
-brne  :   5 brpl  :   0 brsh  :   1 brtc  :   0 brts  :   0 brvc  :   0 
+brcc  :   0 brcs  :   0 break :   0 breq  :   0 brge  :   0 brhc  :   0 
+brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
+brne  :   2 brpl  :   0 brsh  :   1 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   5 cbr   :   0 
-clc   :   3 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
+clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :   6 cpse  :   0 dec   :   4 eor   :   0 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   1 jmp   :   0 
-ld    :   0 ldd   :   0 ldi   :  22 lds   :   9 lpm   :   0 lsl   :   0 
-lsr   :   0 mov   :   8 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   1 or    :   0 ori   :   1 out   :   0 pop   :  20 
-push  :  20 rcall :   0 ret   :   0 reti  :   0 rjmp  :  22 rol   :   6 
+cpi   :   1 cpse  :   0 dec   :   1 eor   :   0 fmul  :   0 fmuls :   0 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   0 jmp   :   0 
+ld    :   0 ldd   :   0 ldi   :   9 lds   :   6 lpm   :   0 lsl   :   0 
+lsr   :   0 mov   :   1 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
+neg   :   0 nop   :   1 or    :   0 ori   :   1 out   :   0 pop   :   8 
+push  :   8 rcall :   0 ret   :   0 reti  :   0 rjmp  :   5 rol   :   0 
 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   8 sbic  :   0 sbis  :   0 
-sbiw  :   1 sbr   :   0 sbrc  :   1 sbrs  :   5 sec   :   3 seh   :   0 
+sbiw  :   1 sbr   :   0 sbrc  :   1 sbrs  :   2 sec   :   0 seh   :   0 
 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
-sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :  10 
-sub   :   6 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 27 out of 113 (23.9%)
+sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   8 
+sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
+Instructions used: 18 out of 113 (15.9%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000192    402      0    402   32768   1.2%
+[.cseg] 0x000000 0x0000a6    166      0    166   32768   0.5%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

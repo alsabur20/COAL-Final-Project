@@ -15,6 +15,29 @@
 ;	Serial_readStr		pending
 
 
+; Macro to read a single character from the UART
+; Inputs: register to hold the received character
+; Outputs: none
+; Working: receives characters via UART and stores in a register
+; Registers modified: r16
+.macro Serial_readChar
+	; save the state of R16
+	PUSH            R16
+	Serial_readChar_WAIT:
+	; wait till a character is in the buffer
+	LDS             R16, UCSR0A
+	SBRS            R16, RXC0
+	RJMP            Serial_readChar_WAIT
+	; read the character
+	LDS             @0, UDR0
+	Serial_readChar_ClearBuffer:
+    ; Check if the buffer is still not empty
+    LDS             R16, UCSR0A
+    SBRS            R16, RXC0
+    ;RJMP            Serial_readChar_ClearBuffer
+	; restore the state of R16 and return
+	POP             R16
+.endmacro
 
 ; Macro to initializes the UART to 9600 BAUD at a frequency of 16 MHz (for Arduino UNO ATmega328p)
 ; Inputs: none

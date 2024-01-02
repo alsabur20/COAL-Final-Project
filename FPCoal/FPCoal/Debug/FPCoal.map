@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  D:\Semester 3\COAL\Arduino UNO\FPCoal\FPCoal\main.asm Fri Dec 29 11:52:38 2023
+AVRASM ver. 2.2.8  C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm Tue Jan 02 11:52:09 2024
 
 
 EQU  SIGNATURE_000 0000001e
@@ -697,38 +697,15 @@ EQU  SPMRaddr     00000032
 EQU  INT_VECTORS_SIZE 00000034
 DEF  A            r16
 DEF  AH           r17
+DEF  buttonState  r18
+DEF  alarmState   r19
 EQU  F_CPU        00f42400
 EQU  BAUD_RATE    00002580
 EQU  BAUD_PRESCALER 00000067
 CSEG loop         0000001d
 CSEG adc_wait     00000022
-CSEG Serial_writeReg_ASCII_LOOP@Serial_writeReg_ASCII@2572 00000035
-CSEG div8u@div@2606 0000003f
-CSEG d8u_1@div@2606 00000041
-CSEG d8u_2@div@2606 00000045
-CSEG d8u_3@div@2606 0000004b
-CSEG exit@div@2606 0000004d
-CSEG div8u@div@2650 00000051
-CSEG d8u_1@div@2650 00000053
-CSEG d8u_2@div@2650 00000057
-CSEG d8u_3@div@2650 0000005d
-CSEG exit@div@2650 0000005f
-CSEG div8u@div@2694 00000063
-CSEG d8u_1@div@2694 00000065
-CSEG d8u_2@div@2694 00000069
-CSEG d8u_3@div@2694 0000006f
-CSEG exit@div@2694 00000071
-CSEG Serial_writeReg_ASCII_writing@Serial_writeReg_ASCII@2572 00000075
-CSEG Serial_writeReg_ASCII_writing_L1@Serial_writeReg_ASCII@2572 0000007c
-CSEG Serial_writeReg_ASCII_writing_L2@Serial_writeReg_ASCII@2572 00000081
-CSEG Serial_writeReg_ASCII_writing_L3@Serial_writeReg_ASCII@2572 00000086
-CSEG Serial_writeReg_ASCII_writing_start@Serial_writeReg_ASCII@2572 00000089
-CSEG Serial_writeReg_ASCII_LOOP_1@Serial_writeReg_ASCII@2572 0000008a
-CSEG Serial_writeReg_ASCII_LOOP_2@Serial_writeReg_ASCII@2572 00000092
-CSEG Serial_writeReg_ASCII_writing_skip@Serial_writeReg_ASCII@2572 00000097
-CSEG Serial_writeReg_ASCII_writing_end@Serial_writeReg_ASCII@2572 00000099
-CSEG Serial_writeNewLine_LOOP1@Serial_writeNewLine@2806 000000a2
-CSEG Serial_writeNewLine_LOOP2@Serial_writeNewLine@2806 000000a9
-CSEG L1@delay@2829 000000b5
-CSEG L2@delay@2829 000000b7
-CSEG smokeDetected 000000c5
+CSEG Serial_writeReg_LOOP_1@Serial_writeReg@2598 0000002c
+CSEG Serial_writeReg_LOOP_2@Serial_writeReg@2598 00000035
+CSEG L1@delay@2622 0000003f
+CSEG L2@delay@2622 00000041
+CSEG smokeDetected 0000004f
