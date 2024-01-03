@@ -1,16 +1,14 @@
 
-AVRASM ver. 2.2.8  C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm Tue Jan 02 11:52:09 2024
+AVRASM ver. 2.2.8  C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm Wed Jan 03 09:59:30 2024
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
 C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(1): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
 C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(2): Including file 'C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\uartMacros.inc'
 C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(3): Including file 'C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\delayMacro.inc'
-C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(4): Including file 'C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\divMacro.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
 C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(1): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
 C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(2): Including file 'C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\uartMacros.inc'
 C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(3): Including file 'C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\delayMacro.inc'
-C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(4): Including file 'C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\divMacro.inc'
                                  
                                  .include "m328pdef.inc"
                                  
@@ -1534,35 +1532,7 @@ C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(4): In
                                  	POP				R17
                                  .endmacro
                                  
-                                 
-                                 
-                                 
-                                 ; ***************************************************************************
-                                 ; *		Macros written by:													*
-                                 ; *			Syed Tehseen ul Hasan Shah										*
-                                 ; *			Lecturer, University of Engineering and Technology Lahore.		*
-                                 ; *			24-December-2023												*
-                                 .include "delayMacro.inc"
-                                 
-                                 .macro delay
-                                 	push r18
-                                 	push r24
-                                 	push r25
-                                 	ldi r18,@0/10
-                                 	L1:
-                                 	ldi r24,LOW(39998) ; intialize inner loop count in inner
-                                 	ldi r25,HIGH(39998) ; loop high and low registers
-                                 	L2:
-                                 	sbiw r24,1 ; decrement inner loop registers
-                                 	brne L2 ; branch to L2 if iLoop registers != 0
-                                 	dec r18 ; decrement outer loop register
-                                 	brne L1 ; branch to L1 if outer loop register != 0
-                                 	nop ; no operation
-                                 	pop r25
-                                 	pop r24
-                                 	pop r18
-                                 .include "divMacro.inc"
-                                 
+                                 ; Macro to divide two 8-bit integers
                                  .macro div
                                  ;***************************************************************************
                                  ;* "div8u" - 8/8 Bit Unsigned Division
@@ -1605,28 +1575,50 @@ C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(4): In
                                  
                                  
                                  
+                                 
                                  ; ***************************************************************************
-                                 ; *		Macro written by:													*
+                                 ; *		Macros written by:													*
                                  ; *			Syed Tehseen ul Hasan Shah										*
                                  ; *			Lecturer, University of Engineering and Technology Lahore.		*
                                  ; *			24-December-2023												*
+                                 .include "delayMacro.inc"
+                                 
+                                 .macro delay
+                                 	push r18
+                                 	push r24
+                                 	push r25
+                                 	ldi r18,@0/10
+                                 	L1:
+                                 	ldi r24,LOW(39998) ; intialize inner loop count in inner
+                                 	ldi r25,HIGH(39998) ; loop high and low registers
+                                 	L2:
+                                 	sbiw r24,1 ; decrement inner loop registers
+                                 	brne L2 ; branch to L2 if iLoop registers != 0
+                                 	dec r18 ; decrement outer loop register
+                                 	brne L1 ; branch to L1 if outer loop register != 0
+                                 	nop ; no operation
+                                 	pop r25
+                                 	pop r24
+                                 	pop r18
                                  
                                  .def A = r16
                                  .def AH = r17
-                                 .def buttonState = r18
-                                 .def alarmState = r19
+                                 .def mode = r18
+                                 .def alarmStatus = r19
+                                 .def serialInput = r20
+                                 
                                  
                                  .org 0x0000
                                  	
                                  	; I/O Pins Configuration
-000000 9a25                      	SBI DDRB, 5
-000001 9a24                      	SBI DDRB, 4
-000002 9a23                      	SBI DDRB, 3
+000000 9a25                      	SBI DDRB, 5		;Green LED
+000001 9a24                      	SBI DDRB, 4		;Red LED
+000002 9a23                      	SBI DDRB, 3		;Alarm
                                  
-000003 9a2d                      	SBI PORTB, 5 
-000004 982c                      	CBI PORTB, 4
-000005 982b                      	CBI PORTB, 3
-                                 
+000003 9a2d                      	SBI PORTB, 5	;Turning on the Green LED representing the normal state
+000004 982c                      	CBI PORTB, 4	;Turning off the Red LED in normal state
+000005 982b                      	CBI PORTB, 3	;Turning off the alarm in normal state
+                                 	
                                  	; ADC Configuration
 000006 ec07                      	LDI A,0b11000111 ; [ADEN ADSC ADATE ADIF ADIE ADIE ADPS2 ADPS1 ADPS0]
 000007 9300 007a                 	STS ADCSRA,A
@@ -1646,64 +1638,146 @@ C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm(4): In
 000018 e006
 000019 9300 00c2
 00001b 911f
-00001c 910f                      	Serial_begin
+00001c 910f                      	Serial_begin	;Initialization of Serial Communication
+                                 
+00001d e320                      	ldi mode,'0'	;Clearing to remove garbage
+00001e e330                      	ldi alarmStatus,'0'		;Clearing to remove garbage
                                  
                                  loop:
-                                     ; Start an ADC conversion by setting ADSC bit (bit 6)
-00001d 9100 007a                     LDS A,ADCSRA ; Start Analog to Digital Conversion
-00001f 6400                      	ORI A,(1<<ADSC)
-000020 9300 007a                 	STS ADCSRA,A
+00001f e300                      	ldi A, '0'
+000020 9100 00c0
+000022 ff07
+000023 c003
+000024 9100 00c6
+000026 c001
+000027 e000                      	Serial_read
+000028 2f40                      	mov serialInput, r16	;reading serial for input if mode is changed
+                                 
+                                 	;Comparing the read value if received
+000029 3340                      	cpi serialInput, '0'
+00002a f079                      	breq setAutoMode
+                                 
+00002b 3341                      	cpi serialInput, '1'
+00002c f079                      	breq setManualMode
+                                 
+00002d 3342                      	cpi serialInput, '2'
+00002e f0f1                      	breq alarmOn
+                                 
+00002f 3343                      	cpi serialInput, '3'
+000030 f109                      	breq alarmOff
+                                 
+                                 	;Comparing and jumping to the selected working mode
+000031 3320                      	cpi mode,'0'
+000032 f121                      	breq automatic
+                                 
+000033 3321                      	cpi mode, '1'
+000034 f049                      	breq manual
+                                 
+000035 3322                      	cpi mode, '2'
+000036 f0b1                      	breq alarmOn
+                                 
+000037 3323                      	cpi mode, '3'
+000038 f0c9                      	breq alarmOff
+                                 
+000039 c01d                      	rjmp automatic		;By default working in Automatic Mode
+                                 
+                                 setAutoMode:
+00003a e320                      	ldi mode, '0'  ; '0' represents automatic mode
+00003b cfe3                      	rjmp loop
+                                 
+                                 setManualMode:
+00003c e321                      	ldi mode, '1'  ; '1' represents manual mode
+00003d cfe1                      	rjmp loop
+                                 
+                                 manual:	
+00003e 932f
+00003f 938f
+000040 939f
+000041 e624
+000042 e38e
+000043 e99c
+000044 9701
+000045 f7f1
+000046 952a
+000047 f7d1
+000048 0000
+000049 919f
+00004a 918f
+00004b 912f                      	delay 1000
+00004c cfd2                      	rjmp loop
+                                 
+                                 alarmOn:
+00004d e322                      	ldi mode, '2'
+00004e 982d                      	CBI PORTB, 5	
+00004f 9a2c                      	SBI PORTB, 4	
+000050 9a2b                      	SBI PORTB, 3
+000051 cfcd                      	rjmp loop
+                                 
+                                 alarmOff:
+000052 e323                      	ldi mode, '3'
+000053 9a2d                      	SBI PORTB, 5
+000054 982c                      	CBI PORTB, 4
+000055 982b                      	CBI PORTB, 3
+000056 cfc8                          rjmp loop
+                                 
+                                 automatic:
+                                 	; Start an ADC conversion by setting ADSC bit (bit 6)
+000057 9100 007a                     LDS A,ADCSRA ; Start Analog to Digital Conversion
+000059 6400                      	ORI A,(1<<ADSC)
+00005a 9300 007a                 	STS ADCSRA,A
                                      ; Wait until the ADSC bit has been cleared
                                  adc_wait:
-000022 9100 007a                     LDS A,ADCSRA ; wait for conversion to complete
-000024 fd06                      	sbrc A,ADSC
-000025 cffc                          rjmp adc_wait
+00005c 9100 007a                     LDS A,ADCSRA ; wait for conversion to complete
+00005e fd06                      	sbrc A,ADSC
+00005f cffc                          rjmp adc_wait
                                      
                                  	; Read ADC result
-000026 9120 0078                     LDS r18, ADCL
-000028 9120 0079                 	LDS r18, ADCH	
-00002a 930f
-00002b 930f
-00002c 9100 00c0
-00002e ff05
-00002f cffc
-000030 910f
-000031 2f02
-000032 9300 00c6
-000034 930f
-000035 9100 00c0
-000037 ff05
-000038 cffc
-000039 910f
-00003a 910f                      	Serial_writeReg r18
-00003b 932f
-00003c 938f
-00003d 939f
-00003e e624
-00003f e38e
-000040 e99c
-000041 9701
-000042 f7f1
-000043 952a
-000044 f7d1
-000045 0000
-000046 919f
-000047 918f
-000048 912f                      	delay 1000
+000060 9100 0078                     LDS A, ADCL
+000062 9100 0079                 	LDS A, ADCH	
+                                 
+                                 	;Send the reading serialy to ESP
+000064 930f
+000065 930f
+000066 9100 00c0
+000068 ff05
+000069 cffc
+00006a 910f
+00006b 2f00
+00006c 9300 00c6
+00006e 930f
+00006f 9100 00c0
+000071 ff05
+000072 cffc
+000073 910f
+000074 910f                      	Serial_writeReg A
+000075 932f
+000076 938f
+000077 939f
+000078 e624
+000079 e38e
+00007a e99c
+00007b 9701
+00007c f7f1
+00007d 952a
+00007e f7d1
+00007f 0000
+000080 919f
+000081 918f
+000082 912f                      	delay 1000
+                                 
                                      ; Compare ADC result with TRIGPOINT
-000049 3b2e                          cpi r18, 190
-00004a f420                          brsh smokeDetected
-                                     
-00004b 9a2d                          SBI PORTB, 5
-00004c 982c                      	CBI PORTB, 4
-00004d 982b                      	CBI PORTB, 3
-00004e cfce                          rjmp loop
-                                     
-                                 smokeDetected:
-00004f 982d                          CBI PORTB, 5
-000050 9a2c                      	SBI PORTB, 4
-000051 9a2b                      	SBI PORTB, 3
-000052 cfca                          rjmp loop
+000083 3b0e                          cpi A, 190
+000084 f420                          brsh smokeDetected
+                                 
+000085 9a2d                          SBI PORTB, 5
+000086 982c                      	CBI PORTB, 4
+000087 982b                      	CBI PORTB, 3
+000088 cf96                          rjmp loop
+                                 
+                                 smokeDetected:		;If smoke detected turn of the green light and turn on the alarm and red led
+000089 982d                      	CBI PORTB, 5	
+00008a 9a2c                      	SBI PORTB, 4	
+00008b 9a2b                      	SBI PORTB, 3
 
 
 RESOURCE USE INFORMATION
@@ -1723,37 +1797,37 @@ counted separately from r26..r31 here.
 "ATmega328P" register use summary:
 x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  29 r17:   4 r18:   8 r19:   0 r20:   0 
-r21:   0 r22:   0 r23:   0 r24:   4 r25:   3 r26:   0 r27:   0 r28:   0 
+r13:   0 r14:   0 r15:   0 r16:  39 r17:   4 r18:  17 r19:   1 r20:   5 
+r21:   0 r22:   0 r23:   0 r24:   8 r25:   6 r26:   0 r27:   0 r28:   0 
 r29:   0 r30:   0 r31:   0 
-Registers used: 5 out of 35 (14.3%)
+Registers used: 7 out of 35 (20.0%)
 
 "ATmega328P" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
 andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
-brcc  :   0 brcs  :   0 break :   0 breq  :   0 brge  :   0 brhc  :   0 
+brcc  :   0 brcs  :   0 break :   0 breq  :   8 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   2 brpl  :   0 brsh  :   1 brtc  :   0 brts  :   0 brvc  :   0 
-brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   5 cbr   :   0 
+brne  :   4 brpl  :   0 brsh  :   1 brtc  :   0 brts  :   0 brvc  :   0 
+brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   8 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :   1 cpse  :   0 dec   :   1 eor   :   0 fmul  :   0 fmuls :   0 
+cpi   :   9 cpse  :   0 dec   :   2 eor   :   0 fmul  :   0 fmuls :   0 
 fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   0 jmp   :   0 
-ld    :   0 ldd   :   0 ldi   :   9 lds   :   6 lpm   :   0 lsl   :   0 
-lsr   :   0 mov   :   1 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   1 or    :   0 ori   :   1 out   :   0 pop   :   8 
-push  :   8 rcall :   0 ret   :   0 reti  :   0 rjmp  :   5 rol   :   0 
-ror   :   0 sbc   :   0 sbci  :   0 sbi   :   8 sbic  :   0 sbis  :   0 
-sbiw  :   1 sbr   :   0 sbrc  :   1 sbrs  :   2 sec   :   0 seh   :   0 
+ld    :   0 ldd   :   0 ldi   :  20 lds   :   8 lpm   :   0 lsl   :   0 
+lsr   :   0 mov   :   2 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
+neg   :   0 nop   :   2 or    :   0 ori   :   1 out   :   0 pop   :  11 
+push  :  11 rcall :   0 ret   :   0 reti  :   0 rjmp  :  13 rol   :   0 
+ror   :   0 sbc   :   0 sbci  :   0 sbi   :  11 sbic  :   0 sbis  :   0 
+sbiw  :   2 sbr   :   0 sbrc  :   1 sbrs  :   3 sec   :   0 seh   :   0 
 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   8 
 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 18 out of 113 (15.9%)
+Instructions used: 19 out of 113 (16.8%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0000a6    166      0    166   32768   0.5%
+[.cseg] 0x000000 0x00011a    282      0    282   32768   0.9%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

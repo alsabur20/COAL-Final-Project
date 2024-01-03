@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm Tue Jan 02 11:52:09 2024
+AVRASM ver. 2.2.8  C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm Wed Jan 03 09:59:30 2024
 
 
 EQU  SIGNATURE_000 0000001e
@@ -697,15 +697,27 @@ EQU  SPMRaddr     00000032
 EQU  INT_VECTORS_SIZE 00000034
 DEF  A            r16
 DEF  AH           r17
-DEF  buttonState  r18
-DEF  alarmState   r19
+DEF  mode         r18
+DEF  alarmStatus  r19
+DEF  serialInput  r20
 EQU  F_CPU        00f42400
 EQU  BAUD_RATE    00002580
 EQU  BAUD_PRESCALER 00000067
-CSEG loop         0000001d
-CSEG adc_wait     00000022
-CSEG Serial_writeReg_LOOP_1@Serial_writeReg@2598 0000002c
-CSEG Serial_writeReg_LOOP_2@Serial_writeReg@2598 00000035
-CSEG L1@delay@2622 0000003f
-CSEG L2@delay@2622 00000041
-CSEG smokeDetected 0000004f
+CSEG loop         0000001f
+CSEG Serial_read_Start@Serial_read@2583 00000024
+CSEG Serial_read_Skip@Serial_read@2583 00000027
+CSEG Serial_read_END@Serial_read@2583 00000028
+CSEG setAutoMode  0000003a
+CSEG setManualMode 0000003c
+CSEG alarmOn      0000004d
+CSEG alarmOff     00000052
+CSEG automatic    00000057
+CSEG manual       0000003e
+CSEG L1@delay@2641 00000042
+CSEG L2@delay@2641 00000044
+CSEG adc_wait     0000005c
+CSEG Serial_writeReg_LOOP_1@Serial_writeReg@2692 00000066
+CSEG Serial_writeReg_LOOP_2@Serial_writeReg@2692 0000006f
+CSEG L1@delay@2716 00000079
+CSEG L2@delay@2716 0000007b
+CSEG smokeDetected 00000089

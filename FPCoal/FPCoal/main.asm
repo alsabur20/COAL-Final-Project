@@ -1,7 +1,6 @@
 .include "m328pdef.inc"
 .include "uartMacros.inc"
 .include "delayMacro.inc"
-.include "divMacro.inc"
 
 .def A = r16
 .def AH = r17
@@ -13,13 +12,13 @@
 .org 0x0000
 	
 	; I/O Pins Configuration
-	SBI DDRB, 5		;green
-	SBI DDRB, 4		;red
-	SBI DDRB, 3		;alarm
+	SBI DDRB, 5		;Green LED
+	SBI DDRB, 4		;Red LED
+	SBI DDRB, 3		;Alarm
 
-	SBI PORTB, 5 
-	CBI PORTB, 4
-	CBI PORTB, 3
+	SBI PORTB, 5	;Turning on the Green LED representing the normal state
+	CBI PORTB, 4	;Turning off the Red LED in normal state
+	CBI PORTB, 3	;Turning off the alarm in normal state
 	
 	; ADC Configuration
 	LDI A,0b11000111 ; [ADEN ADSC ADATE ADIF ADIE ADIE ADPS2 ADPS1 ADPS0]
@@ -29,15 +28,17 @@
 	SBI PORTC,PC0 ; Enable Pull-up Resistor
 
 	; macro to initilize the serial communication
-	Serial_begin
-	ldi mode,'0'
-	ldi alarmStatus,'0'
+	Serial_begin	;Initialization of Serial Communication
+
+	ldi mode,'0'	;Clearing to remove garbage
+	ldi alarmStatus,'0'		;Clearing to remove garbage
 
 loop:
 	ldi A, '0'
 	Serial_read
-	mov serialInput, r16
+	mov serialInput, r16	;reading serial for input if mode is changed
 
+	;Comparing the read value if received
 	cpi serialInput, '0'
 	breq setAutoMode
 
@@ -50,6 +51,7 @@ loop:
 	cpi serialInput, '3'
 	breq alarmOff
 
+	;Comparing and jumping to the selected working mode
 	cpi mode,'0'
 	breq automatic
 
@@ -62,14 +64,14 @@ loop:
 	cpi mode, '3'
 	breq alarmOff
 
-	rjmp automatic
+	rjmp automatic		;By default working in Automatic Mode
 
 setAutoMode:
-	ldi mode, '0'  ; '1' represents automatic mode
+	ldi mode, '0'  ; '0' represents automatic mode
 	rjmp loop
 
 setManualMode:
-	ldi mode, '1'  ; '0' represents manual mode
+	ldi mode, '1'  ; '1' represents manual mode
 	rjmp loop
 
 manual:	
@@ -104,20 +106,22 @@ adc_wait:
 	; Read ADC result
     LDS A, ADCL
 	LDS A, ADCH	
+
+	;Send the reading serialy to ESP
 	Serial_writeReg A
 	delay 1000
+
     ; Compare ADC result with TRIGPOINT
     cpi A, 190
     brsh smokeDetected
+
     SBI PORTB, 5
 	CBI PORTB, 4
 	CBI PORTB, 3
     rjmp loop
 
-smokeDetected:
+smokeDetected:		;If smoke detected turn of the green light and turn on the alarm and red led
 	CBI PORTB, 5	
 	SBI PORTB, 4	
 	SBI PORTB, 3
-	rjmp loop
-
-	
+	rjmp loop	

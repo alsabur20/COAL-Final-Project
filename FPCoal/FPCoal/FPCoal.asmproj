@@ -70,9 +70,6 @@
     <Compile Include="delayMacro.inc">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="divMacro.inc">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="uartMacros.inc">
       <SubType>Code</SubType>
     </Compile>

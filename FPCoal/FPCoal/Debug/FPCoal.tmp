@@ -13,7 +13,6 @@
   <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc</FILE>
   <FILE>C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\uartMacros.inc</FILE>
   <FILE>C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\delayMacro.inc</FILE>
-  <FILE>C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\divMacro.inc</FILE>
  </INCLUDED_FILES>
  <OBJECT_FILES>
   <FILE>C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\Debug\FPCoal.obj</FILE>
@@ -26,8 +25,14 @@
   <FILE>FPCoal.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <loop><FILE>C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm</FILE><LINE>32</LINE></loop>
-  <adc_wait><FILE>C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm</FILE><LINE>38</LINE></adc_wait>
-  <smokeDetected><FILE>C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm</FILE><LINE>57</LINE></smokeDetected>
+  <loop><FILE>C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm</FILE><LINE>36</LINE></loop>
+  <setAutoMode><FILE>C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm</FILE><LINE>69</LINE></setAutoMode>
+  <setManualMode><FILE>C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm</FILE><LINE>73</LINE></setManualMode>
+  <alarmOn><FILE>C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm</FILE><LINE>81</LINE></alarmOn>
+  <alarmOff><FILE>C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm</FILE><LINE>88</LINE></alarmOff>
+  <automatic><FILE>C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm</FILE><LINE>95</LINE></automatic>
+  <manual><FILE>C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm</FILE><LINE>77</LINE></manual>
+  <adc_wait><FILE>C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm</FILE><LINE>101</LINE></adc_wait>
+  <smokeDetected><FILE>C:\Users\alsab\OneDrive\Desktop\COAL-Final-Project\FPCoal\FPCoal\main.asm</FILE><LINE>123</LINE></smokeDetected>
  </LABELS>
 </ASSEMBLER_INFO>
