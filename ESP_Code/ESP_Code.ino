@@ -2,17 +2,21 @@
 #include <PubSubClient.h>
 #include <ESP32Firebase.h>
 
+// Wi-Fi credentials
 const char *ssid = "Sabur";         // Enter your Wi-Fi name
 const char *password = "12131313";  // Enter Wi-Fi password
 
-const char *mqttBroker = "test.mosquitto.org";
+// MQTT broker details
+const char *mqttBroker = "broker.hivemq.com";
 const int mqttPort = 1883;
 const char *mqttClientId = "ESP32CLIENT";
 const char *topic = "mqttData";
 const char *modeTopic = "operatingMode";
 
+// Flag for manual mode
 bool manualModeActive = false;
 
+// Buffer for sensor readings
 const int BUFFER_SIZE = 50;  // Adjust the size based on your requirements
 uint8_t sensorReadings[BUFFER_SIZE];
 int readingsCount = 0;
@@ -21,7 +25,6 @@ int readingsCount = 0;
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
-
 Firebase firebase(firebaseHost);
 
 void setupWifi() {
@@ -33,6 +36,7 @@ void setupWifi() {
   Serial.println("Connected to the Wi-Fi network");
 }
 
+// Function to check and reconnect Wi-Fi if the connection is lost
 void checkWifiConnection() {
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("WiFi connection lost. Reconnecting...");
@@ -40,6 +44,7 @@ void checkWifiConnection() {
   }
 }
 
+// MQTT callback function
 void callback(char *topic, byte *payload, unsigned int length) {
   String modePayload = "";
   for (int i = 0; i < length; i++) {
@@ -95,6 +100,7 @@ void setup() {
 void loop() {
   checkWifiConnection();
 
+  // Reading data from sensor via Serial2
   if (Serial2.available() > 0 && readingsCount < BUFFER_SIZE) {
     sensorReadings[readingsCount] = Serial2.read();
     readingsCount++;
@@ -102,16 +108,19 @@ void loop() {
     Serial.println(sensorReadings[readingsCount - 1]);
   }
 
+  // Publish sensor readings via MQTT if connected and data available
   if (mqttClient.connected() && readingsCount > 0) {
     publishReading();
   }
 
+  // Reconnect to MQTT if not connected
   if (!mqttClient.connected()) {
     reconnectMQTT();
   }
   mqttClient.loop();
 }
 
+// Function to publish sensor readings via MQTT
 void publishReading() {
   char readingString[8];  // Adjust the size as needed
   snprintf(readingString, sizeof(readingString), "%d", sensorReadings[0]);
@@ -125,6 +134,7 @@ void publishReading() {
   readingsCount--;
 }
 
+// Function to reconnect to MQTT broker
 void reconnectMQTT() {
   while (!mqttClient.connected()) {
     if (mqttClient.connect(mqttClientId)) {
